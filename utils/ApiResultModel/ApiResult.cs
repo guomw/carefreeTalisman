@@ -32,7 +32,7 @@ namespace utils.ApiResultModel
         }
 
         /// <summary>
-        /// 
+        /// 输出结果
         /// </summary>
         /// <param name="resultEnum"></param>
         /// <param name="data"></param>
