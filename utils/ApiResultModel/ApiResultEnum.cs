@@ -6,10 +6,26 @@ namespace utils.ApiResultModel
 {
     public enum ApiResultEnum
     {
-        禁止请求 = 403,
-        请求成功 = 2000,
-        缺少签名 = 4002,
-        签名错误 = 4003,
-        服务器开小差 = 5000,
+        /// <summary>
+        /// No request
+        /// </summary>
+        NOREQUEST = 403,
+        /// <summary>
+        /// 成功
+        /// </summary>
+        SUCCESS = 2000,
+        /// <summary>
+        /// 错误
+        /// </summary>
+        ERROR = 5000,
+        /// <summary>
+        /// 缺少签名
+        /// </summary>
+        LACKSIGN = 4002,
+        /// <summary>
+        /// 签名错误
+        /// </summary>
+        SIGNERROR = 4003,
+
     }
 }

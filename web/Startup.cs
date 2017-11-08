@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http.Authentication;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace web
 {
     public class Startup
@@ -24,6 +27,7 @@ namespace web
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -31,9 +35,9 @@ namespace web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             // Add framework services.
             services.AddMvc();
-
             services.AddAuthorization();
         }
 
@@ -50,7 +54,7 @@ namespace web
             }
             else
             {
-                app.UseExceptionHandler("/login/Forbidden");
+                //app.UseExceptionHandler("/login/Forbidden");
             }
 
             app.UseStaticFiles();
@@ -59,7 +63,7 @@ namespace web
             {
                 AuthenticationScheme = "Cookie",
                 LoginPath = new PathString("/login"),
-                AccessDeniedPath = new PathString("/login/Forbidden"),
+                AccessDeniedPath = new PathString("/Forbidden"),                        
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
@@ -68,19 +72,35 @@ namespace web
 
             app.UseMvc(routes =>
             {
+
+                routes.MapRoute(
+                    name: "home",
+                    template: "",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
+
+                //登录
+                routes.MapRoute(
+                    name: "login",
+                    template: "login",
+                    defaults: new { controller = "Login", action = "Login" }
+                );
+
+                //
+                routes.MapRoute(
+                    name: "Forbidden",
+                    template: "Forbidden",
+                    defaults: new { controller = "Login", action = "Forbidden" }
+                );
+
+
                 //接口路由
                 routes.MapRoute(
                     name: "defaultApi",
                     template: "api/{controller}/{action}",
-                    defaults: new { controller = "Home", action = "Index" }
+                    defaults: new { controller = "api", action = "Index" }
                 );
 
-
-                routes.MapRoute(
-                    name: "login",
-                    template: "login/{action}",
-                    defaults: new { controller = "Login", action = "Login" }
-                );
 
                 routes.MapRoute(
                     name: "default",

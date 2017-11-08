@@ -30,6 +30,37 @@ namespace utils.ApiResultModel
                 data = new object()
             };
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resultCode"></param>
+        /// <param name="resultMsg"></param>
+        /// <returns></returns>
+        public static ApiResult Write(int resultCode,string resultMsg)
+        {
+            return new ApiResult
+            {
+                resultCode = resultCode,
+                resultMsg = resultMsg.ToString(),
+                data = new object()
+            };
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resultCode"></param>
+        /// <param name="resultMsg"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ApiResult Write(int resultCode, string resultMsg,object data)
+        {
+            return new ApiResult
+            {
+                resultCode = resultCode,
+                resultMsg = resultMsg,
+                data = data
+            };
+        }
 
         /// <summary>
         /// 输出结果
@@ -82,6 +113,24 @@ namespace utils.ApiResultModel
                 data = dict
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resultEnum"></param>
+        /// <param name="resultMsg"></param>
+        /// <param name="key"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ApiResult Write(int resultCode, string resultMsg, string key, object data)
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict[key] = data;
+            return new ApiResult
+            {
+                resultCode = resultCode,
+                resultMsg = resultMsg,
+                data = dict
+            };
+        }
     }
 }

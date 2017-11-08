@@ -10,12 +10,17 @@ using utils;
 using utils.ApiResultModel;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using web.Common;
 
 namespace web.Controllers
 {
 
     public class BaseController : Controller
     {
+
+        public static string authenticationScheme = "Cookie";
+
         /// <summary>
         /// 返回json格式
         /// </summary>
@@ -25,50 +30,74 @@ namespace web.Controllers
         {
             IsoDateTimeConverter timeConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
             return Content(JsonConvert.SerializeObject(apiResult, Startup.settings), "application/json", System.Text.Encoding.UTF8);
-
         }
 
 
         /// <summary>
         /// 设置授权认证数
-        /// </summary>
-        /// <param name="keyName"></param>
-        /// <param name="value"></param>
-        /// <param name="Expires">时效，单位分钟</param>
-        public async void SetsAuthenticationAsync(string keyName, string value, long Expires = 60 * 24)
+        /// </summary>        
+        /// <param name="value">实体序列化JsonConvert.SerializeObject(data)</param>
+        /// <param name="valueType"></param>
+        public async void SetsAuthenticationAsync(string value, AuthorizationStorageType valueType)
         {
-            var claims = new List<Claim>()
+            var claims = new List<Claim>() { new Claim(valueType.ToString(), value) };
+            Task<AuthenticateInfo> authenticateInfo = HttpContext.Authentication.GetAuthenticateInfoAsync(authenticationScheme);
+            if (!authenticateInfo.IsFaulted && authenticateInfo.Result.Principal != null)
             {
-              new Claim(keyName,value)
-            };
-            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims));
-            await HttpContext.Authentication.SignInAsync("Cookie", userPrincipal, new AuthenticationProperties
+                claims = authenticateInfo.Result.Principal.Claims.ToList();
+                int idx = claims.FindIndex(c => { return c.Type.Equals(valueType.ToString()); });
+                if (idx >= 0)
+                    claims.RemoveAt(idx);
+                claims.Add(new Claim(valueType.ToString(), value));
+            }
+            ClaimsIdentity identity = new ClaimsIdentity(claims);
+            var userPrincipal = new ClaimsPrincipal(identity);
+            await HttpContext.Authentication.SignInAsync(authenticationScheme, userPrincipal, new AuthenticationProperties
             {
-                ExpiresUtc = DateTime.UtcNow.AddMinutes(Expires),
+                ExpiresUtc = DateTime.UtcNow.AddHours(24),
                 IsPersistent = false,
-                AllowRefresh = false
+                AllowRefresh = true
             });
+
         }
 
         /// <summary>
         /// 获取授权数据
         /// </summary>
-        /// <param name="keyName"></param>
+        /// <param name="valueType"></param>
         /// <returns></returns>
-        public string GetAuthClainValue(string keyName)
+        public string GetAuthClainValue(AuthorizationStorageType valueType)
         {
             string value = string.Empty;
-            Task<AuthenticateInfo> authenticateInfo = HttpContext.Authentication.GetAuthenticateInfoAsync("Cookie");
-            IEnumerable<Claim> l = authenticateInfo.Result.Principal.Claims;
-            foreach (Claim item in l)
+            try
             {
-                if (item.Type.Equals(keyName))
+                Task<AuthenticateInfo> authenticateInfo = HttpContext.Authentication.GetAuthenticateInfoAsync(authenticationScheme);
+                if (authenticateInfo.IsFaulted || authenticateInfo.Result.Principal == null) return value;
+                IEnumerable<Claim> claims = authenticateInfo.Result.Principal.Claims;
+                foreach (Claim claim in claims)
                 {
-                    value = item.Value;
-                    break;
+                    if (claim.Type.Equals(valueType.ToString()))
+                    {
+                        value = claim.Value;
+                        break;
+                    }
                 }
             }
+            catch (Exception)
+            {
+            }
             return value;
+        }
+        /// <summary>
+        /// 验证授权用户是否成功
+        /// </summary>
+        public bool IsAuthenticated
+        {
+            get
+            {
+                var userData = GetAuthClainValue(AuthorizationStorageType.UserData);
+                return !string.IsNullOrEmpty(userData);
+            }
         }
 
     }

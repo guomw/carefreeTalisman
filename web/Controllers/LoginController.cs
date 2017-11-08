@@ -6,31 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using utils.ApiResultModel;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using service.Model;
+using Newtonsoft.Json;
+using web.Common;
 
 namespace web.Controllers
 {
     public class LoginController : BaseController
     {
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
+            if (IsAuthenticated)            
+                await HttpContext.Authentication.SignOutAsync(authenticationScheme);            
             return View();
         }
 
-        public IActionResult Login(string name)
+        [HttpPost]
+        public IActionResult Login(string username, string userpassword)
         {
 
-            this.SetsAuthenticationAsync("userName", name, 30);
+            UserModel userData = new UserModel()
+            {
+                UserId = 1,
+                UserName = username,
+                UserPassword = utils.EncryptHelper.md5DigestAsHex(userpassword),
+                UserRole = "admin",
+                UserCreateTime = DateTime.Now
+            };            
+            this.SetsAuthenticationAsync(JsonConvert.SerializeObject(userData), AuthorizationStorageType.UserData);
 
-            //return RedirectToAction("Forbidden", "login");
-
-            return View();
+            return RedirectToRoute("home");            
         }
-
-        [Authorize]
         public IActionResult Forbidden()
         {
-            string userName = this.GetAuthClainValue("userName");
             return View();
         }
     }

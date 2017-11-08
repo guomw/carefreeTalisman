@@ -42,7 +42,7 @@ namespace web.Filters
             //string osType = GetHeaderValue(header, "osType");//context.HttpContext.Request.Headers.Get("osType");
             //string logInfo = string.Format("url:{0} mobileType:{3} osType:{4} Message:{1} StackTrace:{2}", context.HttpContext.Request.Path.ToString(), context.Exception.Message, context.Exception.StackTrace, mobileType, osType);
             context.ExceptionHandled = true;
-            context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.服务器开小差), Startup.settings);
+            context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.ERROR), Startup.settings);
         }
     }
 }

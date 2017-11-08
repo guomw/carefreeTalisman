@@ -12,13 +12,10 @@ using System.Security.Claims;
 namespace web.Controllers.Api
 {
     public class ApiController : BaseController
-    {
-        [Authorize]
+    {        
         public IActionResult Index()
         {
-            string userName = this.GetAuthClainValue("userName");
-            
-            return GetContent(ApiResult.Write(ApiResultEnum.«Î«Û≥…π¶, userName));
+            return GetContent(ApiResult.Write(ApiResultEnum.SUCCESS));
         }
     }
 }

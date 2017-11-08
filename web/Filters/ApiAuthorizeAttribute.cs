@@ -108,7 +108,7 @@ namespace web.Filters
             string requestSign = GetRequestValue(context.HttpContext.Request, "sign");
             if (string.IsNullOrEmpty(requestSign))
             {
-                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.缺少签名), Startup.settings);
+                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.LACKSIGN, "No signature!!", null), Startup.settings);
                 return;
             }
             JObject prams = GetParams(context.HttpContext.Request);
@@ -129,7 +129,7 @@ namespace web.Filters
             string currentSign = EncryptHelper.md5DigestAsHex(Encoding.UTF8.GetBytes(preStr.ToString()));
             if (!requestSign.Equals(currentSign.ToUpper()))
             {
-                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.签名错误), Startup.settings);
+                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.SIGNERROR, "Signature error", null), Startup.settings);
                 return;
             }
             //存储当前会话数据            

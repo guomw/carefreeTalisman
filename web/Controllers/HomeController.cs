@@ -4,34 +4,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using web.Common;
+using Newtonsoft.Json;
+using service.Model;
 
 namespace web.Controllers
 {
     public class HomeController : BaseController
     {
+        /// <summary>
+        /// 首页
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
-            string userName = this.GetAuthClainValue("userName");
-            return View();
-        }
+            if (!IsAuthenticated)
+                return RedirectToAction("login", "login");
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
+            string value = this.GetAuthClainValue(AuthorizationStorageType.UserData);
+            if (string.IsNullOrEmpty(value))
+                return RedirectToAction("login", "login");
 
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View();
+            var user = JsonConvert.DeserializeObject<UserModel>(value);            
+            return View(user);
         }
     }
 }
