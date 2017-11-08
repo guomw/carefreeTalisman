@@ -27,7 +27,6 @@ namespace web
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         public IConfigurationRoot Configuration { get; }
