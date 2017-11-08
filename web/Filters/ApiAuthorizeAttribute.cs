@@ -96,44 +96,43 @@ namespace web.Filters
         /// <param name="context"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
-            HttpContext httpContext = context.HttpContext;
-            IHeaderDictionary header = context.HttpContext.Request.Headers;
-            string appVersion = GetHeaderValue(header, "appVersion");// context.Request.Headers.Get("appVersion");//APP版本
-            string hwid = GetHeaderValue(header, "hwid");//  context.Request.Headers.Get("hwid");//设备号
-            string mobileType = GetHeaderValue(header, "mobileType");//  context.Request.Headers.Get("mobileType");//设备类型
-            string osType = GetHeaderValue(header, "osType");//  context.Request.Headers.Get("osType");//系统类型  ios or android
-            string osVersion = GetHeaderValue(header, "osVersion");//  context.Request.Headers.Get("osVersion");//系统版本
+            //HttpContext httpContext = context.HttpContext;
+            //IHeaderDictionary header = context.HttpContext.Request.Headers;
+            //string appVersion = GetHeaderValue(header, "appVersion");// context.Request.Headers.Get("appVersion");//APP版本
+            //string hwid = GetHeaderValue(header, "hwid");//  context.Request.Headers.Get("hwid");//设备号
+            //string mobileType = GetHeaderValue(header, "mobileType");//  context.Request.Headers.Get("mobileType");//设备类型
+            //string osType = GetHeaderValue(header, "osType");//  context.Request.Headers.Get("osType");//系统类型  ios or android
+            //string osVersion = GetHeaderValue(header, "osVersion");//  context.Request.Headers.Get("osVersion");//系统版本
 
-            string requestSign = GetRequestValue(context.HttpContext.Request, "sign");
-            if (string.IsNullOrEmpty(requestSign))
-            {
-                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.LACKSIGN, "No signature!!", null), Startup.settings);
-                return;
-            }
-            JObject prams = GetParams(context.HttpContext.Request);
-            SortedDictionary<string, string> paramters = new SortedDictionary<string, string>();
-            foreach (var item in prams)
-            {
-                if (item.Key != "sign" && !string.IsNullOrEmpty(item.Value.ToString()))
-                {
-                    paramters.Add(item.Key.ToLower(), item.Value.ToString());
-                }
-            }
-            StringBuilder preStr = new StringBuilder();
-            foreach (KeyValuePair<string, string> kp in paramters)
-            {
-                preStr.Append(kp.Key + kp.Value);
-            }
-            preStr.Append(secrectKey);
-            string currentSign = EncryptHelper.md5DigestAsHex(Encoding.UTF8.GetBytes(preStr.ToString()));
-            if (!requestSign.Equals(currentSign.ToUpper()))
-            {
-                context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.SIGNERROR, "Signature error", null), Startup.settings);
-                return;
-            }
-            //存储当前会话数据            
-            context.HttpContext.Session.Set("appVersion", appVersion.ToByte());
+            //string requestSign = GetRequestValue(context.HttpContext.Request, "sign");
+            //if (string.IsNullOrEmpty(requestSign))
+            //{
+            //    context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.LACKSIGN, "No signature!!", null), Startup.settings);
+            //    return;
+            //}
+            //JObject prams = GetParams(context.HttpContext.Request);
+            //SortedDictionary<string, string> paramters = new SortedDictionary<string, string>();
+            //foreach (var item in prams)
+            //{
+            //    if (item.Key != "sign" && !string.IsNullOrEmpty(item.Value.ToString()))
+            //    {
+            //        paramters.Add(item.Key.ToLower(), item.Value.ToString());
+            //    }
+            //}
+            //StringBuilder preStr = new StringBuilder();
+            //foreach (KeyValuePair<string, string> kp in paramters)
+            //{
+            //    preStr.Append(kp.Key + kp.Value);
+            //}
+            //preStr.Append(secrectKey);
+            //string currentSign = EncryptHelper.md5DigestAsHex(Encoding.UTF8.GetBytes(preStr.ToString()));
+            //if (!requestSign.Equals(currentSign.ToUpper()))
+            //{
+            //    context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.SIGNERROR, "Signature error", null), Startup.settings);
+            //    return;
+            //}
+            ////存储当前会话数据            
+            //context.HttpContext.Session.SetString("appVersion", appVersion);
         }
     }
 }

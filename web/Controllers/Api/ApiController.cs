@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace web.Controllers.Api
 {
-    public class ApiController : BaseController
+    public class ApiController : ApiBaseController
     {        
         public IActionResult Index()
         {

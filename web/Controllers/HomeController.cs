@@ -7,10 +7,15 @@ using Microsoft.AspNetCore.Authorization;
 using web.Common;
 using Newtonsoft.Json;
 using service.Model;
+using web.Filters;
+using System.Text;
 
+/// <summary>
+/// 
+/// </summary>
 namespace web.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : AdminBaseController
     {
         /// <summary>
         /// 首页
@@ -18,15 +23,20 @@ namespace web.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            if (!IsAuthenticated)
-                return RedirectToAction("login", "login");
-
-            string value = this.GetAuthClainValue(AuthorizationStorageType.UserData);
-            if (string.IsNullOrEmpty(value))
-                return RedirectToAction("login", "login");
-
-            var user = JsonConvert.DeserializeObject<UserModel>(value);            
+            var value = GetAuthClainValue(AuthorizationStorageType.UserData);
+            var user = JsonConvert.DeserializeObject<UserModel>(value);
             return View(user);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult About()
+        {
+
+            return View();
+        }
+
     }
 }

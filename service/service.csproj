@@ -8,8 +8,4 @@
     <ProjectReference Include="..\utils\utils.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DAL\" />
-  </ItemGroup>
-
 </Project>

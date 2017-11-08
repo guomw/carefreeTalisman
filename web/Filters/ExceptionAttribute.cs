@@ -13,7 +13,10 @@ using utils.ApiResultModel;
 
 namespace web.Filters
 {
-    public class ExceptionAttribute : ExceptionFilterAttribute
+    /// <summary>
+    /// 接口异常处理
+    /// </summary>
+    public class ApiExceptionAttribute : ExceptionFilterAttribute
     {
 
         /// <summary>
@@ -34,15 +37,24 @@ namespace web.Filters
             catch { }
             return v;
         }
-
+        
         public override void OnException(ExceptionContext context)
         {
-            IHeaderDictionary header = context.HttpContext.Request.Headers;
-            //string mobileType = GetHeaderValue(header, "mobileType");// context.HttpContext.Request.Headers.Get("mobileType");//设备类型
-            //string osType = GetHeaderValue(header, "osType");//context.HttpContext.Request.Headers.Get("osType");
-            //string logInfo = string.Format("url:{0} mobileType:{3} osType:{4} Message:{1} StackTrace:{2}", context.HttpContext.Request.Path.ToString(), context.Exception.Message, context.Exception.StackTrace, mobileType, osType);
             context.ExceptionHandled = true;
             context.Result = new JsonResult(ApiResult.Write(ApiResultEnum.ERROR), Startup.settings);
         }
     }
+
+    /// <summary>
+    /// 后台异常处理
+    /// </summary>
+    public class AdminExceptionAttribute: ExceptionFilterAttribute
+    {
+        public override void OnException(ExceptionContext context)
+        {
+            context.ExceptionHandled = true;
+            context.Result = new RedirectToRouteResult("Forbidden", null);
+        }
+    }
+
 }
