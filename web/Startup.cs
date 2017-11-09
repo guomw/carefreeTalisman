@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using web.Models;
+using service.DAL;
 
 namespace web
 {
@@ -30,14 +32,17 @@ namespace web
 
         public IConfiguration Configuration { get; }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-
-            services.AddDbContext<DbContext>(options => {
+            services.AddApplicationInsightsTelemetry(Configuration);
+            services.AddEntityFrameworkSqlServer().AddDbContext<DBHelperContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddMvc();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
@@ -100,6 +105,7 @@ namespace web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            //            DbInitialize.Initialize(app.ApplicationServices);            
         }
     }
 }

@@ -6,16 +6,14 @@ using System.Text;
 
 namespace service
 {
-    public class ServiceFactory<T> where T : new()
+    public class ServiceFactory<T>
     {
-
         public static T Factory()
-        {
-            T t = new T();
+        {            
             if (typeof(T) == typeof(IDemoService))
                 return (T)DemoServiceImpl.Instance;
 
-            return t;
+            throw new InvalidCastException("没有找到" + typeof(T) + "的实现");
         }
     }
 }

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace web.Models
 {
     /// <summary>
@@ -14,12 +13,14 @@ namespace web.Models
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetService<DbContext>();
 
-            if (context.Database == null)
+            //var context = serviceProvider.GetService<DbContext>();
+
+            var context = serviceProvider.GetRequiredService<DbContextOptions<DbContext>>();
+            if (context == null)
             {
                 throw new Exception("DB is null");
-            }                       
+            }
         }
     }
 }

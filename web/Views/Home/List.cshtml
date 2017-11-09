@@ -79,7 +79,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="checkbox checkbox-primary m-b-none m-t-none">
-                                                        <input type="checkbox" id="chk1" name="chkProject" value="@item.UserId" />
+                                                        <input type="checkbox" id="chk1" name="chkProject" value="@item.Id" />
                                                         <label for="chk1"></label>
                                                     </div>
                                                 </td>
@@ -90,7 +90,7 @@
                                                 <td>@item.UserRole</td>
                                                 <td>@item.UserCreateTime</td>
                                                 <td>
-                                                    <span th:onclick="|projectListHandler.deletePro(@item.UserId)|" class="cursor-point">
+                                                    <span th:onclick="|projectListHandler.deletePro(@item.Id)|" class="cursor-point">
                                                         <i class="fa fa-trash tooltips"
                                                            data-placement="top" data-toggle="tooltip" data-original-title="删除"></i>
                                                     </span>

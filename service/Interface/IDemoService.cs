@@ -1,11 +1,15 @@
-﻿using System;
+﻿using service.entity;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace service.Interface
 {
     public interface IDemoService
     {
-        string Hello();
+        IQueryable<UserModel> Hello();
+
+        void Insert(UserModel user);
     }
 }
