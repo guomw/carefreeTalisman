@@ -10,6 +10,10 @@ using service.entity;
 using web.Filters;
 using System.Text;
 using web.ViewModel;
+using service.DAL;
+using service.repository;
+using service.Interface;
+using service;
 
 /// <summary>
 /// 
@@ -18,6 +22,12 @@ namespace web.Controllers
 {
     public class HomeController : AdminBaseController
     {
+        private IDemoService demoService;
+        public HomeController(DBHelperContext ctx) : base(ctx)
+        {
+            demoService = ServiceFactory<IDemoService>.Factory(ctx);
+        }
+
         /// <summary>
         /// 首页
         /// </summary>
@@ -37,16 +47,14 @@ namespace web.Controllers
         /// <returns></returns>
         public IActionResult List(int pageIndex = 1, int pageSize = 10)
         {
-            var value = GetAuthClainValue(AuthorizationStorageType.UserData);
-            var user = JsonConvert.DeserializeObject<UserModel>(value);
             List<UserModel> lst = new List<UserModel>();
-            lst.Add(user);
+            lst = demoService.GetAllList().ToList();
             ViewUserModel view = new ViewUserModel()
             {
                 PageIndex = pageIndex,
-                PageSize=pageSize,
+                PageSize = pageSize,
                 TotalPage = 2,
-                TotalRecord = 20,
+                TotalRecord = demoService.Count(),
                 Rows = lst
             };
             return View(view);

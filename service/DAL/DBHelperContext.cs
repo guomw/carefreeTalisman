@@ -13,11 +13,9 @@ namespace service.DAL
 
 
         public DbSet<UserModel> UserInfo { get; set; }
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+         
             modelBuilder.Entity<UserModel>().ToTable("Manager");
         }
     }

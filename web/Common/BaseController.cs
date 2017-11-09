@@ -10,12 +10,21 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using web.Common;
 using Microsoft.AspNetCore.Authentication;
+using service.DAL;
 
 namespace web.Controllers
 {
 
     public class BaseController : Controller
     {
+
+        public DBHelperContext dbHelperContext;
+
+        public BaseController(DBHelperContext ctx)
+        {
+            dbHelperContext = ctx;
+        }
+
 
         public static string authenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 

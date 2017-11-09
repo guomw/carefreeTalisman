@@ -15,27 +15,25 @@ using Microsoft.AspNetCore.Authentication;
 using service;
 using service.Interface;
 using utils;
+using service.DAL;
+using service.repository;
+using service.Interface.Impl;
 
 namespace web.Controllers
 {
     public class LoginController : BaseController
     {
+        private IDemoService demoService;
+        public LoginController(DBHelperContext ctx) : base(ctx)
+        {
+            demoService=new DemoServiceImpl(ctx);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Login()
         {
             if (IsAuthenticated)
                 await AuthenticationHttpContextExtensions.SignOutAsync(HttpContext, authenticationScheme);
-
-
-            //IDemoService demoService = ServiceFactory<IDemoService>.Factory();
-
-            //demoService.Insert(new UserModel()
-            //{
-            //    UserName = "admin",
-            //    UserPassword = EncryptHelper.md5DigestAsHex("123456"),
-            //    UserRole = "管理员"
-
-            //});
 
             return View();
         }
@@ -43,15 +41,15 @@ namespace web.Controllers
         [HttpPost]
         public IActionResult Login(string username, string userpassword)
         {
-
-            UserModel userData = new UserModel()
+            UserModel userData = demoService.Get(p => p.UserName == username && p.UserPassword.Equals(EncryptHelper.md5DigestAsHex(userpassword)));
+            if (userData == null)
             {
-                Id = 1,
-                UserName = username,
-                UserPassword = utils.EncryptHelper.md5DigestAsHex(userpassword),
-                UserRole = "admin",
-                UserCreateTime = DateTime.Now
-            };
+                ViewData["resultCode"] = 1;
+                ViewData["errorMsg"] = "用户名或密码错误";
+                return View();
+            }
+            userData.LastUpdateTime = DateTime.Now;
+            demoService.Update(userData);
             this.SetsAuthenticationAsync(JsonConvert.SerializeObject(userData), AuthorizationStorageType.UserData);
 
             return RedirectToRoute("home");

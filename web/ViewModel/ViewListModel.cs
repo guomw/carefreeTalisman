@@ -19,7 +19,7 @@ namespace web.ViewModel
         /// <summary>
         /// 总记录
         /// </summary>
-        public int TotalRecord { get; set; }
+        public long TotalRecord { get; set; }
         /// <summary>
         /// 总页数
         /// </summary>

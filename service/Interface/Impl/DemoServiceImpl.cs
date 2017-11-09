@@ -10,38 +10,23 @@ using System.Text;
 
 namespace service.Interface.Impl
 {
-    public class DemoServiceImpl : IDemoService
+    public class DemoServiceImpl : RepositoryBase<UserModel>, IDemoService
     {
-        private static DemoServiceImpl instance = new DemoServiceImpl();
-        private static UserRepository userRepository = null;
-        public DemoServiceImpl()
-        {
-            if (userRepository == null)
-            {
-                //DbContextOptions<DBHelperContext> options = ;    
+        private static DemoServiceImpl instance = null;
 
-                userRepository = new UserRepository(new DBHelperContext(new DbContextOptions<DBHelperContext>()));
-            }
+        public DemoServiceImpl(DBHelperContext context) : base(context)
+        {
         }
-
-        public static IDemoService Instance
+        public static IDemoService Instance(DBHelperContext context)
         {
-            get
-            {
+            if (instance != null)
                 return instance;
-            }
-        }
+            return new DemoServiceImpl(context);
 
+        }
         public IQueryable<UserModel> Hello()
         {
-            Expression<Func<UserModel, bool>> predicate = null;
-            //predicate = f => f.UserId == 1;
-            return userRepository.GetAllList(predicate);
-        }
-
-        public void Insert(UserModel user)
-        {
-            userRepository.Insert(user);
+            return this.GetAllList();
         }
     }
 }

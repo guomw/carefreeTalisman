@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using service.DAL;
 using web.Filters;
 
 /// <summary>
@@ -14,5 +15,8 @@ namespace web.Controllers
     [AdminAuthorize]
     public class AdminBaseController : BaseController
     {
+        public AdminBaseController(DBHelperContext ctx) : base(ctx)
+        {
+        }
     }
 }
