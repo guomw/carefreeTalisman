@@ -6,7 +6,7 @@
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
  * 2013-2016. All rights reserved.
  */
-document.write('<script src="js/plugins/layer/layer.js"></script>');
+document.write('<script src="/js/plugins/layer/layer.js"></script>');
 
 var modal = function () {
     this.layerIndex = null,

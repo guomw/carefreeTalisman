@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using service.Model;
 using web.Filters;
 using System.Text;
+using web.ViewModel;
 
 /// <summary>
 /// 
@@ -31,12 +32,28 @@ namespace web.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
-        public IActionResult About()
+        public IActionResult List(int pageIndex = 1, int pageSize = 10)
         {
-
-            return View();
+            var value = GetAuthClainValue(AuthorizationStorageType.UserData);
+            var user = JsonConvert.DeserializeObject<UserModel>(value);
+            List<UserModel> lst = new List<UserModel>();
+            lst.Add(user);
+            ViewUserModel view = new ViewUserModel()
+            {
+                PageIndex = pageIndex,
+                PageSize=pageSize,
+                TotalPage = 2,
+                TotalRecord = 20,
+                Rows = lst
+            };
+            return View(view);
         }
+
+
+
 
     }
 }

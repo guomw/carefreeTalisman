@@ -1,0 +1,150 @@
+﻿@model web.ViewModel.ViewUserModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>H+ 后台主题UI框架 - Bootstrap Table</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="~/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="~/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="~/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="~/css/animate.min.css" rel="stylesheet">
+    <link href="~/css/style.min.css?v=4.0.0" rel="stylesheet">
+
+    <!--checkbox-->
+    <link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <form role="form" id="searchForm" class="search-panel" action="list" method="post">
+            <input type="hidden" name="pageIndex" value="@Model.PageIndex" />
+            <input type="hidden" name="pageSize" value="10" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content p-m no-borders">
+                            <div class="form-inline">
+                                <div class="form-group m-r-sm">
+                                    <label class="control-label" for="name">名称：</label>
+                                    <input type="text" class="form-control input-sm mb10" id="name" name="name" placeholder="名称" />
+                                </div>
+                                <div class="form-group m-r-sm">
+                                    <label class="control-label" for="categoryId">分类：</label>
+                                    <select class="form-control input-sm" name="categoryId" id="categoryId">
+                                        <option value="0">--请选择--</option>
+                                        <option value="1">测试</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <p style="height: 8px;"></p>
+                            <div class="form-inline">
+                                <button type="button" onclick="listHandler.search(1)" class="btn btn-success">筛选</button>
+                                <button type="button" onclick="listHandler.searchAll()" class="btn btn-success">显示全部</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--list-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-content p-xxs no-top-border">
+                        <div class="panel-body">
+                            <table class="table table-bordered table-hover table-center">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="checkbox checkbox-primary m-b-none m-t-none">
+                                                <input type="checkbox" id="chkAll" name="chkAll" />
+                                                <label for="chkAll"></label>
+                                            </div>
+                                        </th>
+                                        <th>用户名</th>
+                                        <th>密码</th>
+                                        <th>角色</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Rows != null)
+                                    {
+                                        foreach (var item in Model.Rows)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox checkbox-primary m-b-none m-t-none">
+                                                        <input type="checkbox" id="chk1" name="chkProject" value="@item.UserId" />
+                                                        <label for="chk1"></label>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @item.UserName
+                                                </td>
+                                                <td>@item.UserPassword</td>
+                                                <td>@item.UserRole</td>
+                                                <td>@item.UserCreateTime</td>
+                                                <td>
+                                                    <span th:onclick="|projectListHandler.deletePro(@item.UserId)|" class="cursor-point">
+                                                        <i class="fa fa-trash tooltips"
+                                                           data-placement="top" data-toggle="tooltip" data-original-title="删除"></i>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <p style="float: left; margin: 20px 0;">
+                                共 @Model.TotalRecord 条记录，当前第 @Model.PageIndex/@Model.TotalPage，每页 @Model.PageSize 条记录
+                            </p>
+                            <ul style="float: right;" class="pagination pagination-split"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/js/jquery.min.js?v=2.1.4"></script>
+    <script src="~/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="~/js/content.min.js?v=1.0.0"></script>
+    <script src="~/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="~/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="~/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/js/plugins/hot/bootstrap.hot.extra-utils.js"></script>
+    <script src="~/js/plugins/hot/bootstrap.hot.extra-init.js"></script>
+    <script>
+        var listUrl = "";
+        var ajaxUrl = "";
+        $(function () {
+            //初始化分页
+            var pageinate = new hot.paging(".pagination", $("input[name=pageIndex]").val(), @Model.TotalPage, $("input[name=pageSize]").val());
+
+            pageinate.init(function (p) {
+                listHandler.search(p);
+            });
+            $("#chkAll").click(function () {
+                if ($(this).prop("checked")) {
+                    $("input[name=chkProject]").prop("checked", "checked");
+                } else {
+                    $("input[name=chkProject]").removeAttr("checked");
+                }
+            })
+        });
+        var listHandler = {
+            search: function (pageIndex) {
+                $("input[name=pageIndex]").val(pageIndex);
+                $("#searchForm").submit();
+            }
+        }
+    </script>
+
+</body>
+</html>
