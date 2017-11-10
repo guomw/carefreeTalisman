@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-namespace service.entity
+namespace service.Entity
 {
     public class UserModel
     {

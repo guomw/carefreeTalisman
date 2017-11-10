@@ -6,16 +6,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace service.repository
+namespace service.Repository
 {
     public class RepositoryBase<T> : IRepository<T> where T : class
     {
-        private readonly DBHelperContext _context = null;
+        private static DBHelperContext _context = null;
         private readonly DbSet<T> _dbSet;
-        public RepositoryBase(DBHelperContext context)
+        public RepositoryBase()
         {
-            this._context = context;
-            this._dbSet = this._context.Set<T>();
+            if (_context == null)
+                _context = new DBHelperContext();
+            this._dbSet = _context.Set<T>();
         }
 
         public long Count()

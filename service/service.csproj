@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="DAL\DBHelperContext.cs~RF9a68a4.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\utils\utils.csproj" />
   </ItemGroup>
 

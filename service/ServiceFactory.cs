@@ -11,8 +11,8 @@ namespace service
     {
         public static T Factory(DBHelperContext context)
         {            
-            if (typeof(T) == typeof(IDemoService))
-                return (T)DemoServiceImpl.Instance(context);
+            //if (typeof(T) == typeof(IDemoService))
+            //    return (T)DemoServiceImpl.Instance(context);
 
             throw new InvalidCastException("没有找到" + typeof(T) + "的实现");
         }

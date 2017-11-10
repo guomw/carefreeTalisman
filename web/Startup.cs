@@ -36,14 +36,20 @@ namespace web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //ef支持
             services.AddApplicationInsightsTelemetry(Configuration);
-            services.AddEntityFrameworkSqlServer().AddDbContext<DBHelperContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddEntityFrameworkSqlServer();
+            //services.AddEntityFrameworkSqlServer().AddDbContext<DBHelperContext>(options =>
+            //{
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            //});
+
+
+            services.AddSession();
 
             services.AddMvc();
 
+            //添加cookie 授权
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
                 {
@@ -67,6 +73,8 @@ namespace web
             }
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseAuthentication();
 
@@ -105,7 +113,7 @@ namespace web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            //            DbInitialize.Initialize(app.ApplicationServices);            
+            
         }
     }
 }

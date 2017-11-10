@@ -56,7 +56,7 @@ $.fn.extend({
         var content = $this.html();
         var index = new modal();
         index.init(title, content, yes, options);
-        $this.empty();
+        //$this.empty();
         return index;
     },
     datePick: function (options) {

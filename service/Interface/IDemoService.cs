@@ -1,9 +1,9 @@
-﻿using service.entity;
+﻿using service.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using service.repository;
+using service.Repository;
 
 namespace service.Interface
 {

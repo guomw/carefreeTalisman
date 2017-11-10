@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using web.Common;
 using Newtonsoft.Json;
-using service.entity;
+using service.Entity;
 using web.Filters;
 using System.Text;
 using web.ViewModel;
 using service.DAL;
-using service.repository;
+using service.Repository;
 using service.Interface;
 using service;
+using service.Interface.Impl;
 
 /// <summary>
 /// 
@@ -22,11 +23,7 @@ namespace web.Controllers
 {
     public class HomeController : AdminBaseController
     {
-        private IDemoService demoService;
-        public HomeController(DBHelperContext ctx) : base(ctx)
-        {
-            demoService = ServiceFactory<IDemoService>.Factory(ctx);
-        }
+        private IDemoService demoService= new DemoServiceImpl();
 
         /// <summary>
         /// 首页

@@ -15,8 +15,8 @@ namespace web.Controllers
     [AdminAuthorize]
     public class AdminBaseController : BaseController
     {
-        public AdminBaseController(DBHelperContext ctx) : base(ctx)
-        {
-        }
+        //public AdminBaseController(DBHelperContext ctx) : base(ctx)
+        //{
+        //}
     }
 }

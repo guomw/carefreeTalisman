@@ -18,12 +18,12 @@ namespace web.Controllers
     public class BaseController : Controller
     {
 
-        public DBHelperContext dbHelperContext;
+        //public DBHelperContext dbHelperContext;
 
-        public BaseController(DBHelperContext ctx)
-        {
-            dbHelperContext = ctx;
-        }
+        //public BaseController(DBHelperContext ctx)
+        //{
+        //    dbHelperContext = ctx;
+        //}
 
 
         public static string authenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;

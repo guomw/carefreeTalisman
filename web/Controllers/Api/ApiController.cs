@@ -14,9 +14,9 @@ namespace web.Controllers.Api
 {
     public class ApiController : ApiBaseController
     {
-        public ApiController(DBHelperContext ctx) : base(ctx)
-        {
-        }
+        //public ApiController(DBHelperContext ctx) : base(ctx)
+        //{
+        //}
 
         public IActionResult Index()
         {

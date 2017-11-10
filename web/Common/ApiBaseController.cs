@@ -12,8 +12,8 @@ namespace web.Controllers.Api
     [ApiAuthorize]
     public class ApiBaseController : BaseController
     {
-        public ApiBaseController(DBHelperContext ctx) : base(ctx)
-        {
-        }
+        //public ApiBaseController(DBHelperContext ctx) : base(ctx)
+        //{
+        //}
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace service.repository
+namespace service.Repository
 {
     public interface IRepository<T> where T : class
     {

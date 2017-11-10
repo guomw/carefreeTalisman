@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using utils.ApiResultModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using service.entity;
+using service.Entity;
 using Newtonsoft.Json;
 using web.Common;
 using Microsoft.AspNetCore.Authentication;
@@ -16,18 +16,14 @@ using service;
 using service.Interface;
 using utils;
 using service.DAL;
-using service.repository;
+using service.Repository;
 using service.Interface.Impl;
 
 namespace web.Controllers
 {
     public class LoginController : BaseController
     {
-        private IDemoService demoService;
-        public LoginController(DBHelperContext ctx) : base(ctx)
-        {
-            demoService=new DemoServiceImpl(ctx);
-        }
+        private IDemoService demoService= new DemoServiceImpl(); 
 
         [HttpGet]
         public async Task<IActionResult> Login()
